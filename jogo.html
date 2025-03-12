@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo de Matemática</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      margin-top: 50px;
+    }
+    .feedback {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    .timer {
+      font-size: 18px;
+      color: #d9534f;
+      margin: 10px 0;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jogo de Matemática</h1>
+    <p id="question">Preparando a próxima pergunta...</p>
+    <input type="number" id="answer" placeholder="Digite sua resposta">
+    <button onclick="checkAnswer()">Enviar</button>
+    <p class="feedback" id="feedback"></p>
+    <p>Pontuação: <span id="score">0</span></p>
+    <p class="timer">Tempo restante: <span id="timer">10</span> segundos</p>
+  </div>
+  <audio id="correctSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+  <audio id="wrongSound" src="https://www.soundjay.com/button/beep-10.wav"></audio>
+  <script>
+    let score = 0;
+    let difficulty = 1;
+    let timer = 10;
+    let currentQuestion;
+
+    function generateQuestion() {
+      const num1 = Math.floor(Math.random() * 10 * difficulty) + 1;
+      const num2 = Math.floor(Math.random() * 10 * difficulty) + 1;
+      const operators = ['+', '-', '*'];
+      const operator = operators[Math.floor(Math.random() * operators.length)];
+      currentQuestion = { num1, num2, operator };
+      document.getElementById('question').textContent = `Quanto é ${num1} ${operator} ${num2}?`;
+    }
+
+    function checkAnswer() {
+      const answer = Number(document.getElementById('answer').value);
+      let correctAnswer;
+
+      switch (currentQuestion.operator) {
+        case '+': correctAnswer = currentQuestion.num1 + currentQuestion.num2; break;
+        case '-': correctAnswer = currentQuestion.num1 - currentQuestion.num2; break;
+        case '*': correctAnswer = currentQuestion.num1 * currentQuestion.num2; break;
+      }
+
+      const feedback = document.getElementById('feedback');
+      const correctSound = document.getElementById('correctSound');
+      const wrongSound = document.getElementById('wrongSound');
+
+      if (answer === correctAnswer) {
+        feedback.textContent = 'Parabéns, você acertou! 🎉';
+        feedback.style.color = 'green';
+        correctSound.play();
+        score++;
+        difficulty += 0.3;
+        resetTimer();
+      } else {
+        feedback.textContent = 'Resposta incorreta! 😢';
+        feedback.style.color = 'red';
+        wrongSound.play();
+      }
+
+      document.getElementById('score').textContent = score;
+      generateQuestion();
+    }
+
+    function startTimer() {
+      const timerElement = document.getElementById('timer');
+      const interval = setInterval(() => {
+        timer--;
+        timerElement.textContent = timer;
+
+        if (timer === 0) {
+          clearInterval(interval);
+          alert(`Tempo esgotado! Sua pontuação final foi: ${score}`);
+          location.reload();
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      timer = 10;
+      document.getElementById('timer').textContent = timer;
+    }
+
+    generateQuestion();
+    startTimer();
+  </script>
+</body>
+</html>
