@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de .txt para PDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1>Conversor de .txt para PDF</h1>
+    <form>
+        <label for="arquivoTxt">Selecione um arquivo .txt:</label>
+        <input type="file" id="arquivoTxt" accept=".txt" required><br><br>
+        <button type="button" onclick="gerarPDF()">Gerar PDF</button>
+    </form>
+
+    <h2>PDF Gerado:</h2>
+    <iframe id="pdfPreview" style="width: 100%; height: 500px; border: 1px solid #ccc;"></iframe>
+
+    <script>
+        async function gerarPDF() {
+            const inputFile = document.getElementById('arquivoTxt').files[0];
+
+            if (!inputFile) {
+                alert('Por favor, selecione um arquivo .txt!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const texto = event.target.result;
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
+
+                // Adiciona o conteúdo do .txt ao PDF
+                const linhas = texto.split('\n');
+                let y = 10; // Posição inicial no PDF
+                linhas.forEach(linha => {
+                    pdf.text(linha, 10, y);
+                    y += 10; // Move para a próxima linha
+                    if (y > 280) { // Cria uma nova página, se necessário
+                        pdf.addPage();
+                        y = 10;
+                    }
+                });
+
+                // Exibe o PDF na página
+                const pdfBlob = pdf.output('blob');
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                document.getElementById('pdfPreview').src = pdfUrl;
+
+                // Disponibiliza o download automático
+                const link = document.createElement('a');
+                link.href = pdfUrl;
+                link.download = 'arquivo_convertido.pdf';
+                link.click();
+            };
+
+            reader.readAsText(inputFile);
+        }
+    </script>
+</body>
+</html>
+
+file:///C:/Users/aluno/Desktop/conversor.html
