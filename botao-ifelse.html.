@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Se-Então Simples no Botão</title>
+<style>
+    #meuBotaoSimples {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: yellow; /* Cor inicial */
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<button id="meuBotaoSimples">Clique para Mudar a Cor</button>
+
+<script>
+    // 1. Pega uma referência ao botão
+    var botao = document.getElementById('meuBotaoSimples');
+
+    // 2. Adiciona um "ouvinte" para o evento de clique (click)
+    botao.addEventListener('click', function() {
+        // 3. Verifica a condição (estrutura 'se-então')
+        if (botao.style.backgroundColor === 'yellow') {
+            // Se a cor for Amarelo, muda para Rosa
+            botao.style.backgroundColor = 'pink';
+            botao.textContent = 'Agora sou Rosa!';
+        } else {
+            // Senão (se não for azul), muda para azul
+            botao.style.backgroundColor = 'yellow';
+            botao.textContent = 'Agora sou Amarelo!';
+        }
+    });
+</script>
+
+</body>
+</html>
